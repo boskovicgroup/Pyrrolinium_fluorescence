@@ -1,94 +1,204 @@
-%% mono methoxy
+%% mono methoxy experimental
+%% import data
+data = readtable("pmppp_mecn.csv");
+
+%% data modification
+wavelengths1 = table2array(data(1:1203, 1));
+a= table2array(data(1:1203, 10:2:16));
+c= [6.2e-5 3.1e-5 1.5e-5 0.7e-5];
+
+% compute extinction coefficients
+epsilon1= a*c'*inv(c*c');
+% same but with pseudoinverse
+e = a*pinv(c);
+
+%%
 subplot(3,1,1)
+yyaxis left
 plot(wavelengths1, e, 'LineWidth',2);
 xlim([200 450])
-ylim([0 25000])
-xlabel('wavelength [nm]', Interpreter='latex')
-ylabel({'molar absorptivity'  '$[M^{-1}cm^{-1}]$'}, Interpreter='latex')
-title('Absorptions of \textbf{1} $\cdot$ HClO$_4$ in MeCN', Interpreter='latex')
+ylim([0 27000])
+% xlabel('wavelength [nm]', Interpreter='latex')
+% ylabel({'molar absorptivity'  '$[M^{-1}cm^{-1}]$'}, Interpreter='latex')
+title('\textbf{1} $\cdot$ HClO$_4$ in MeCN', Interpreter='latex')
 legend boxoff
 hold on
 
 
-ws = [309.36 284.58]; 
-osc_strengths = [0.706181 0.014944]; 
-sigma = 13; % Broadening factor
+%% TD-DFT data
+lambda = [305.60, 281.07, 232.15, 216.00, 208.04, ...
+              204.78, 196.95, 193.36, 191.93, 187.11];   % nm
+f = [0.7075, 0.0135, 0.0950, 0.1032, 0.0002, ...
+              0.0017, 0.0928, 0.2087, 0.0202, 0.0001];
 
-% 2. Create wavelength range for plotting
-x = min(ws)-50 : 0.1 : max(ws)+50;
-spectrum = zeros(size(x));
+% Parameters
+sigma = 8;                    % Gaussian width (nm)
+x = linspace(200,450,4000);   % Wavelength axis
 
-% 3. Calculate Gaussian Broadening
-for i = 1:length(ws)
-    spectrum = spectrum + osc_strengths(i) * exp(-(x - ws(i)).^2 / (2 * sigma^2));
+% Construct spectrum
+y = zeros(size(x));
+
+for i = 1:length(lambda)
+    y = y + f(i) * exp(-(x-lambda(i)).^2/(2*sigma^2));
 end
 
+% Normalize (optional)
+y = y/max(y);
 
-plot(x, spectrum*max(e), 'LineWidth', 2, 'Color', 'r');
+% Plot
+subplot(3,1,1)
+yyaxis right
+plot(x,y,'LineWidth',2)
+hold on
+
+% Stick spectrum
+stem(lambda,f/max(y)*0.9,...
+    'Color',[0.7 0 0],...
+    'LineStyle','-',...
+    'Marker','none',...
+    'LineWidth',1.5)
+
+set(gca,'FontSize',14,'LineWidth',1.2)
+
+% xlabel('Wavelength (nm)', Interpreter='latex')
+% ylabel('simulated absorbance',  Interpreter='latex')
+
 xlim([200 450])
-
-legend('experimental' , 'predicted',  Interpreter='latex');
+ylim([-0.1 1.1])
+box on
+legend('experimental' , 'simulated',  'oscillator strength', Interpreter='latex');
 legend boxoff
 
+
 %% dimethoxy
+%% import data
+data = readtable("mbg_2_134_dmppp.csv");
+
+%% data modification
+wavelengths2 = table2array(data(1:1203, 1));
+a= table2array(data(1:1203, 10:-2:2));
+c= fliplr([0.7e-5 1.5e-5 3.1e-5 6.2e-5 120e-6]);
+% compute extinction coefficients
+epsilon= a*c'*inv(c*c');
+% same but with pseudoinverse
+e2 = a*pinv(c);
+
 subplot(3,1,2)
+yyaxis left
 plot(wavelengths2, e2, 'LineWidth',2);
 xlim([200 450])
 ylim([0 25000])
-xlabel('wavelength [nm]', Interpreter='latex')
+% xlabel('wavelength [nm]', Interpreter='latex')
 ylabel({'molar absorptivity'  '$[M^{-1}cm^{-1}]$'}, Interpreter='latex')
-title('Absorptions of \textbf{2} $\cdot$ HClO$_4$ in MeCN', Interpreter='latex')
+title('\textbf{2} $\cdot$ HClO$_4$ in MeCN', Interpreter='latex')
 legend boxoff
 hold on
 
-ws = [335.24 301.15]; 
-osc_strengths = [0.355779 0.331913]; 
-sigma = 13; % Broadening factor
+lambda2 = [315.80, 291.36, 269.65, 233.06, 216.34, ...
+              207.91, 207.40, 206.86, 198.90, 196.97];   % nm
+f2 = [0.5334, 0.1492, 0.0005, 0.1263, 0.1172, ...
+              0.0081, 0.0027, 0.0025, 0.3394, 0.0037];
 
-% 2. Create wavelength range for plotting
-x = min(ws)-50 : 0.1 : max(ws)+50;
-spectrum = zeros(size(x));
+% Parameters
+sigma = 8;                    % Gaussian width (nm)
+x2 = linspace(200,450,4000);   % Wavelength axis
 
-% 3. Calculate Gaussian Broadening
-for i = 1:length(ws)
-    spectrum = spectrum + osc_strengths(i) * exp(-(x - ws(i)).^2 / (2 * sigma^2));
+% Construct spectrum
+y2 = zeros(size(x2));
+
+for i = 1:length(lambda2)
+    y2 = y2 + f2(i) * exp(-(x2-lambda2(i)).^2/(2*sigma^2));
 end
 
-% 4. Plot
-plot(x, spectrum*max(e), 'LineWidth', 2, 'Color', 'r');
-xlim([200 450])
+% Normalize (optional)
+y2 = y2/max(y2);
 
-legend('experimental' , 'predicted',  Interpreter='latex');
+% Plot
+subplot(3,1,2)
+yyaxis right
+plot(x2,y2,'LineWidth',2)
+hold on
+
+% Stick spectrum
+stem(lambda2,f2/max(y2)*0.9,...
+    'Color',[0.7 0 0],...
+    'LineStyle','-',...
+    'Marker','none',...
+    'LineWidth',1.5)
+
+set(gca,'FontSize',14,'LineWidth',1.2)
+
+% xlabel('Wavelength (nm)', Interpreter='latex')
+ylabel('simulated absorbance',  Interpreter='latex')
+
+xlim([200 450])
+ylim([-0.1 1.1])
+box on
+legend('experimental' , 'simulated',  'oscillator strength', Interpreter='latex');
 legend boxoff
 
-
 %% trimethoxy
+%% import data
+data = readtable("mbg_2_tmppp.csv");
+
+%% data modification
+wavelengths3 = table2array(data(1:1203, 1));
+a= table2array(data(1:1203, 10:-2:2));
+c= fliplr([0.7e-5 1.5e-5 3.1e-5 6.2e-5 120e-6]);
+% compute extinction coefficients
+epsilon= a*c'*inv(c*c');
+% same but with pseudoinverse
+e3 = a*pinv(c);
+
 subplot(3,1,3)
+yyaxis left
 plot(wavelengths3, e3, 'LineWidth',2);
 xlim([200 450])
 ylim([0 25000])
 xlabel('wavelength [nm]', Interpreter='latex')
-ylabel({'molar absorptivity'  '$[M^{-1}cm^{-1}]$'}, Interpreter='latex')
-title('Absorptions of \textbf{3} $\cdot$ HClO$_4$ in MeCN', Interpreter='latex')
-legend boxoff
+% ylabel({'molar absorptivity'  '$[M^{-1}cm^{-1}]$'}, Interpreter='latex')
+title('\textbf{3} $\cdot$ HClO$_4$ in MeCN', Interpreter='latex')
 hold on
 
-ws = [328.48 321.4]; 
-osc_strengths = [0.541964 0.02117]; 
-sigma = 20; % Broadening factor
 
-% 2. Create wavelength range for plotting
-x = min(ws)-50 : 0.1 : max(ws)+50;
-spectrum = zeros(size(x));
+lambda3 = [321.09, 312.91, 277.52, 265.79, 234.39, ...
+              220.39, 210.88, 209.90, 209.44, 205.41];   % nm
+f3 = [0.5450, 0.0630, 0.0214, 0.0009, 0.1260, ...
+              0.1770, 0.0257, 0.0379, 0.0108, 0.1911];
 
-% 3. Calculate Gaussian Broadening
-for i = 1:length(ws)
-    spectrum = spectrum + osc_strengths(i) * exp(-(x - ws(i)).^2 / (2 * sigma^2));
+% Parameters
+sigma = 8;                    % Gaussian width (nm)
+x3 = linspace(200,450,4000);   % Wavelength axis
+
+% Construct spectrum
+y3 = zeros(size(x3));
+
+for i = 1:length(lambda3)
+    y3 = y3 + f3(i) * exp(-(x3-lambda3(i)).^2/(2*sigma^2));
 end
 
-% 4. Plot
-plot(x, spectrum*20000, 'LineWidth', 2, 'Color', 'r');
-xlim([200 450])
+% Normalize (optional)
+y3 = y3/max(y3);
 
-legend('experimental' , 'predicted',  Interpreter='latex');
+% Plot
+subplot(3,1,3)
+yyaxis right
+plot(x3,y3,'LineWidth',2)
+hold on
+
+% Stick spectrum
+stem(lambda3,f3/max(y3)*0.9,...
+    'Color',[0.7 0 0],...
+    'LineStyle','-',...
+    'Marker','none',...
+    'LineWidth',1.5)
+
+set(gca,'FontSize',14,'LineWidth',1.2)
+
+% xlabel('Wavelength (nm)', Interpreter='latex')
+% ylabel('simulated absorbance',  Interpreter='latex')
+
+xlim([200 450])
+ylim([-0.1 1.1])
+legend('experimental' , 'simulated',  'oscillator strength', Interpreter='latex');
 legend boxoff
