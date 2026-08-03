@@ -1,2 +1,2 @@
 # Enamine_fluorescence
-Repository associated with the paper "Excited-State Enamine Formation Governt Fluorescence in Methoxy-Substituted Phenylpyrrolinium Salts"
+Repository associated with the paper "Conformational Dynamics of Planar and Twisted Excited States of Methoxy-Substituted Phenylpyrrolinium Salts"
