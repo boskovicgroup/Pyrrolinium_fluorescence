@@ -799,7 +799,124 @@ perchloric = -761.317529756
 perchlorate = -760.915621589
 methanol = -115.734981485
 methanolium = -116.148887366
+%%
+%% Convert energies from Hartree to relative energies in eV
 
+Ha_to_eV = 27.211386;
+
+% Use the lowest S0 energy across all structures as the common reference
+Eref_mono = min(mono_iminium_s0);
+Eref_di = min(dmp_iminium_s0);
+Eref_tri = min(tmp_iminium_s0);
+Eref_phenyl = min(phenyl_s0);
+
+%%
+mono_iminium_s0_eV = (mono_iminium_s0 - Eref_mono)*Ha_to_eV;
+mono_iminium_s1_eV = (mono_iminium_s1 - Eref_mono)*Ha_to_eV;
+
+dmp_iminium_s0_eV = (dmp_iminium_s0 - Eref_di)*Ha_to_eV;
+dmp_iminium_s1_eV = (dmp_iminium_s1 - Eref_di)*Ha_to_eV;
+
+tmp_iminium_s0_eV = (tmp_iminium_s0 - Eref_tri)*Ha_to_eV;
+tmp_iminium_s1_eV = (tmp_iminium_s1 - Eref_tri)*Ha_to_eV;
+
+phenyl_s0_eV = (phenyl_s0 - Eref_phenyl)*Ha_to_eV;
+phenyl_s1_eV = (phenyl_s1 - Eref_phenyl)*Ha_to_eV;
+% 
+% mono_enammonium_s0_eV = (mono_enammonium_s0 - Eref)*Ha_to_eV;
+% mono_enammonium_s1_eV = (mono_enammonium_s1 - Eref)*Ha_to_eV;
+% 
+% mono_enamine_s0_eV = (mono_enamine_s0 - Eref)*Ha_to_eV;
+% mono_enamine_s1_eV = (mono_enamine_s1 - Eref)*Ha_to_eV;
+% 
+% mono_imine_s0_eV = (mono_imine_s0 - Eref)*Ha_to_eV;
+% mono_imine_s1_eV = (mono_imine_s1 - Eref)*Ha_to_eV;
+% 
+% dmp_enammonium_s0_eV = (dmp_enammonium_s0 - Eref)*Ha_to_eV;
+% dmp_enammonium_s1_eV = (dmp_enammonium_s1 - Eref)*Ha_to_eV;
+% 
+% dmp_enamine_s0_eV = (dmp_enamine_s0 - Eref)*Ha_to_eV;
+% dmp_enamine_s1_eV = (dmp_enamine_s1 - Eref)*Ha_to_eV;
+% 
+% dmp_imine_s0_eV = (dmp_imine_s0 - Eref)*Ha_to_eV;
+% dmp_imine_s1_eV = (dmp_imine_s1 - Eref)*Ha_to_eV;
+% 
+% tmp_enammonium_s0_eV = (tmp_enammonium_s0 - Eref)*Ha_to_eV;
+% tmp_enammonium_s1_eV = (tmp_enammonium_s1 - Eref)*Ha_to_eV;
+% 
+% tmp_enamine_s0_eV = (tmp_enamine_s0 - Eref)*Ha_to_eV;
+% tmp_enamine_s1_eV = (tmp_enamine_s1 - Eref)*Ha_to_eV;
+% 
+% tmp_imine_s0_eV = (tmp_imine_s0 - Eref)*Ha_to_eV;
+% tmp_imine_s1_eV = (tmp_imine_s1 - Eref)*Ha_to_eV;
+
+%%
+% 1. Create a 2x1 tiled layout
+t = tiledlayout(1, 4);
+ax1 = nexttile;
+
+plot(mono_iminium_angles, mono_iminium_s0_eV,'-o', ...
+    'MarkerSize', 6, 'MarkerEdgeColor','b', 'MarkerFaceColor','b');
+
+hold on
+
+plot(mono_iminium_angles, mono_iminium_s1_eV,'-o', ...
+    'MarkerSize', 6, 'MarkerEdgeColor','r', 'MarkerFaceColor','r');
+ylim([0 4])
+
+title('\textbf{1} ', 'Interpreter','latex');
+legend('$S_0$','$S_1$', 'Interpreter','latex')
+set(gca, 'TickLabelInterpreter', 'latex')
+
+ax5 = nexttile;
+plot(dmp_iminium_angles, dmp_iminium_s0_eV,'-o', ...
+    'MarkerSize', 6, 'MarkerEdgeColor','b', 'MarkerFaceColor','b');
+
+hold on
+
+plot(dmp_iminium_angles, dmp_iminium_s1_eV,'-o', ...
+    'MarkerSize', 6, 'MarkerEdgeColor','r', 'MarkerFaceColor','r');
+ylim([0 4])
+
+legend('$S_0$','$S_1$', 'Interpreter','latex')
+set(gca, 'TickLabelInterpreter', 'latex')
+
+title('\textbf{2} ', 'Interpreter','latex');
+
+
+ax9 = nexttile;
+plot(tmp_iminium_angles, tmp_iminium_s0_eV,'-o', ...
+    'MarkerEdgeColor','b', 'MarkerFaceColor','b');
+
+hold on
+
+plot(tmp_iminium_angles, tmp_iminium_s1_eV,'-o', ...
+    'MarkerSize', 6, 'MarkerEdgeColor','r', 'MarkerFaceColor','r');
+ylim([0 4])
+
+legend('$S_0$','$S_1$', 'Interpreter','latex')
+set(gca, 'TickLabelInterpreter', 'latex')
+
+title('$\textbf{3}$', 'Interpreter','latex');
+
+ax15 = nexttile;
+plot(phenyl_angle, phenyl_s0_eV,'-o', ...
+    'MarkerEdgeColor','b', 'MarkerFaceColor','b');
+
+hold on
+
+plot(phenyl_angle, phenyl_s1_eV,'-o', ...
+    'MarkerSize', 6, 'MarkerEdgeColor','r', 'MarkerFaceColor','r');
+
+title('Phenylpyrrolinium', 'Interpreter','latex')
+legend('$S_0$','$S_1$', 'Interpreter','latex')
+
+set(gca, 'TickLabelInterpreter', 'latex')
+
+
+ylabel(t, '$\Delta E$ / eV','FontSize',36, 'Interpreter','latex')
+xlabel(t,'dihedral angle / $^\circ$', 'FontSize',36, 'Interpreter','latex')
+ylim([0 4])
 %% plotting
 % 1. Create a 2x1 tiled layout
 t = tiledlayout(1, 4);

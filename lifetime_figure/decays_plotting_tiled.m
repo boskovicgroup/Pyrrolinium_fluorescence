@@ -153,5 +153,5 @@ xlim([-0.2 2]);
 yline(0.5, 'LineStyle',':')
 
 ylabel(t, 'fraction', 'FontSize', 14, 'Interpreter','latex');
-xlabel(t, 'lifetime [ns]', 'FontSize', 14, 'Interpreter','latex')
+xlabel(t, 'lifetime / ns', 'FontSize', 14, 'Interpreter','latex')
 title(t, 'Lifetimes of fluorescence decay', 'FontSize', 18, 'Interpreter', 'latex')

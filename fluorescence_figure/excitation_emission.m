@@ -46,7 +46,7 @@ stem(467,0.33,...
 
 legend('$\lambda_{ex} = 335 nm$ ', '$\lambda_{em} = 430 nm$', 'Predicted emission','FontSize', 16 ,'Interpreter','latex')
 set(gca, 'TickLabelInterpreter', 'latex')
-ylabel('oscillator strength', 'FontSize', 18 , 'Interpreter','latex')
+ylabel('oscillator strength', 'FontSize', 30 , 'Interpreter','latex')
 
 tile3 = nexttile;
 plot(tmpp_emiss(:,1), tmpp_emiss(:,2), 'LineWidth',3);
@@ -66,7 +66,7 @@ legend('$\lambda_{ex} = 320 nm $', '$\lambda_{em} = 435 nm$', 'predicted emissio
 
 linkaxes([tile1, tile2, tile3], 'x');
 
-xlabel(t1, '$\lambda$ / nm', 'FontSize',18, 'Interpreter','latex')
+xlabel(t1, '$\lambda$ / nm', 'FontSize',30, 'Interpreter','latex')
 yyaxis left
-ylabel(t1, {'Fl / arb. u. '}, 'FontSize',18, 'Interpreter','latex')
+ylabel(t1, {'Fl / arb. u. '}, 'FontSize',30, 'Interpreter','latex')
 set(gca, 'TickLabelInterpreter', 'latex')
